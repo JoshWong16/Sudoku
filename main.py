@@ -1,5 +1,5 @@
 sample_board = [
-    [0, 0, 0, 0, 0, 3, 7, 0, 0],
+    [0, 0, 0, 0, 0, 3, 7, 0, 0],  # 3, 7 stay
     [0, 0, 0, 0, 8, 4, 0, 0, 0],
     [5, 4, 8, 0, 0, 0, 0, 0, 0],
     [3, 0, 0, 6, 0, 0, 0, 0, 4],
@@ -40,6 +40,7 @@ def find_empty_space(board):
         for col in range(len(board)):
             if board[row][col] == 0:
                 return (row, col)
+    return None
 
 
 def is_valid(point, board):
@@ -56,12 +57,35 @@ def is_valid(point, board):
 
     x_block = x_coord // 3
     y_block = y_coord // 3
-    for row in range(y_block, y_coord + 3):
-        for col in range(x_block, x_block + 3):
+    for row in range(3 * y_block, 3 * y_block + 3):
+        for col in range(3 * x_block, 3 * x_block + 3):
             if board[row][col] == value and row != y_coord and col != x_coord:
                 return False
-
     return True
 
+
+def solve_sudoku(board):
+    # print("xxxxxxxxxxxxxxxxxxxx")
+    # print_board(board)
+    empty_space = find_empty_space(board)
+    if empty_space is None:
+        print_board(board)
+        return True
+    for n in range(1, 10):
+        board[empty_space[0]][empty_space[1]] = n
+        if is_valid(empty_space, board):
+            if solve_sudoku(board):
+                return True
+            else:
+                continue
+    board[empty_space[0]][empty_space[1]] = 0
+    return False
+
+
+print_board(sample_board)
+print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+solve_sudoku(sample_board)
+#
+# print(is_valid((1,2), sample_board))
 
 
